@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# This is a simple script to configure ser2net to allow AVRDude to download hex files remotely.
+# Handy when your work bench is on the oposite side of your office to your development machine.
+
 # Check for ser2net
 if [ "$(which ser2net)" == "" ]; then
 	>&2 echo "This script requires ser2net, available from your favourite package repository ;)"
