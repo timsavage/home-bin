@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Occasionall PyCharm locks up and needs to be killed. This script
+# will not just kill PyCharm but also terminate any child processes
+# that are being debugged.
+
+PYCHARM_PID=`ps aux | grep pycharm | grep boot.jar | awk '{print $2}'`
+PYDEV_PIDS=`ps aux | grep pycharm | grep pydevd.py | awk '{print $2}'`
+
+echo "Killing PyCharm process (${PYCHARM_PID})"
+kill -9 ${PYCHARM_PID}
+
+if [ '${PYDEV_PIDS}' != '' ]; then
+	echo "Killing pydev.py processes (${PYDEV_PIDS})"
+	kill ${PYDEV_PIDS}
+fi

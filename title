@@ -1,0 +1,11 @@
+#!/bin/bash
+
+TITLE=$1
+if [[ "${TITLE}" == "" ]]; then
+	>&2 echo "Set the title of a Terminal"
+	>&2 echo "Usage:"
+	>&2 echo "	$0 TITLE"
+	exit 1
+fi
+
+echo -n -e "\033]0;${TITLE}\007"
