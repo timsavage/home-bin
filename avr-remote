@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Check for ser2net
+if [ "$(which ser2net)" == "" ]; then
+	>&2 echo "This script requires ser2net, available from your favourite package repository ;)"
+	exit 1
+fi
+
+SERIAL_TTY=$1
+shift
+if [ "${SERIAL_TTY}" == "" ]; then
+	>&2 echo "Port not supplied."
+	>&2 echo
+	>&2 echo "Remote serial endpoint for avrdude"
+	>&2 echo "Usage:"
+	>&2 echo "	$0 SERIAL_TTY [PORT]"
+	exit 2
+fi
+
+PORT=$1
+shift
+if [ "${PORT}" == "" ]; then
+	PORT=8086
+fi
+
+echo -n -e "\033]0;AVRDude remote@$(hostname).local:${PORT}\007"
+echo "Listing on ${PORT} for ${SERIAL_TTY}."
+echo
+echo "Use: avrdude -p arduino -P net:$(hostname).local:${PORT} -U flash:w:/path/to/file.hex:i"
+ser2net -d -C "${PORT}:raw:600:${SERIAL_TTY}:115200 NONE 1STOPBIT 8DATABITS -XONXOFF LOCAL -RTSCTS HANGUP_WHEN_DONE"
