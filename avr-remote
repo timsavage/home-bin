@@ -1,0 +1,50 @@
+#!/bin/bash
+
+_usage () {
+	>&2 echo "Remote serial endpoint for AVRDude"
+	>&2 echo "Usage:"
+	>&2 echo "	$0 REMOTE_HOST SERIAL_TTY [PORT]"
+	>&2 echo
+	>&2 echo "	REMOTE_HOST	Host name (or IP) of remote server, this can include"
+	>&2 echo "			username eg user@host"
+	>&2 echo "	SERIAL_TTY	TTY device on remote server"
+	>&2 echo "	[PORT]		Optional port; defaults to 8086"
+}
+
+REMOTE_HOST=$1
+if [ "${REMOTE_HOST}" == "" ]; then
+	>&2 echo "ERROR: Remote host is required"
+	>&2 echo
+	_usage
+	exit 1
+fi
+shift
+
+SERIAL_TTY=$1
+if [ "${SERIAL_TTY}" == "" ]; then
+        >&2 echo "ERROR: TTY not supplied."
+        >&2 echo
+	_usage
+        exit 2
+fi
+shift
+
+PORT=$1
+if [ "${PORT}" == "" ]; then
+        PORT=8086
+fi
+shift
+
+# Check for ser2net
+#if [ "$(which ser2net)" == "" ]; then
+#	>&2 echo "This script requires ser2net, available from your favourite package repository ;)"
+#	exit 1
+#fi
+
+echo -n -e "\033]0;AVRDude remote localhost:${PORT}\007"
+echo "Listening on localhost:${PORT} for ${SERIAL_TTY}."
+echo
+echo "To upload with AVRDude use: "
+echo "	avrdude -p atmega328p -c arduino -P net:localhost:${PORT} -U flash:w:/path/to/file.hex:i"
+ssh -L ${PORT}:localhost:${PORT} ${REMOTE_HOST} \
+'/usr/sbin/ser2net -d -C "${PORT}:raw:600:${SERIAL_TTY}:115200 NONE 1STOPBIT 8DATABITS -XONXOFF LOCAL -RTSCTS HANGUP_WHEN_DONE"'
