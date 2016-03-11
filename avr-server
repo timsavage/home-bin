@@ -24,7 +24,7 @@ if [ "${PORT}" == "" ]; then
 fi
 
 echo -n -e "\033]0;AVRDude remote@$(hostname).local:${PORT}\007"
-echo "Listing on ${PORT} for ${SERIAL_TTY}."
+echo "Listening on ${PORT} for ${SERIAL_TTY}."
 echo
-echo "Use: avrdude -p arduino -P net:$(hostname).local:${PORT} -U flash:w:/path/to/file.hex:i"
+echo "Use: avrdude -p atmega328p -c arduino -P net:$(hostname).local:${PORT} -U flash:w:/path/to/file.hex:i"
 ser2net -d -C "${PORT}:raw:600:${SERIAL_TTY}:115200 NONE 1STOPBIT 8DATABITS -XONXOFF LOCAL -RTSCTS HANGUP_WHEN_DONE"
