@@ -2,6 +2,7 @@
 
 # This is a simple script to configure ser2net to allow AVRDude to download hex files remotely.
 # Handy when your work bench is on the oposite side of your office to your development machine.
+# Based off http://forum.arduino.cc/index.php?topic=326850.0
 
 _usage () {
 	>&2 echo "Remote serial endpoint for AVRDude"
